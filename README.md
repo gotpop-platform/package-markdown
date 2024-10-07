@@ -7,17 +7,17 @@ This is a utility package that renders markdown
 You can install this package using npm/GitHub Packages:
 
 ```
-bun add @gotpop-platform/package-jsx-factory
+npm install @gotpop-platform/package-markdown@1.0.0
 ```
 
 ```
-"@gotpop-platform/package-jsx-factory": "1.0.0"
+"@gotpop-platform/package-markdown": "1.0.0"
 ```
 
 ## Usage
 
 ```typescript
-import { jsxFactory } from "@gotpop-platform/package-jsx-factory"
+import { markdown } from "@gotpop-platform/package-markdown"
 ```
 
 ## Contributing
