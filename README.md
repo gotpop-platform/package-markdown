@@ -6,11 +6,11 @@ This is a utility package that renders markdown
 
 You can install this package using npm/GitHub Packages:
 
-```
+```bash
 npm install @gotpop-platform/package-markdown@1.0.0
 ```
 
-```
+```json
 "@gotpop-platform/package-markdown": "1.0.0"
 ```
 
