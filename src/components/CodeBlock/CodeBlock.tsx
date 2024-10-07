@@ -1,4 +1,4 @@
-import { mkClass, useCSS } from "utils"
+import { mkClass, useCSS } from "@gotpop-platform/package-utilities"
 
 import { jsxFactory } from "@gotpop-platform/package-jsx-factory"
 
