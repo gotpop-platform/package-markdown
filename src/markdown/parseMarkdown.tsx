@@ -44,13 +44,6 @@ export const parseMarkdown = (
   // Convert links
   markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
 
-  // // Extract code blocks
-  // const codeBlocks: any[] = []
-  // markdown = markdown.replace(/```([^`]+)```/g, (match, code) => {
-  //   codeBlocks.push(code)
-  //   return `__CODE_BLOCK_${codeBlocks.length - 1}__`
-  // })
-
   // Extract code blocks with language
   const codeBlocks: { code: string; language: string }[] = []
   markdown = markdown.replace(/```(\w+)?\n([^`]+)```/g, (match, lang, code) => {
@@ -76,15 +69,6 @@ export const parseMarkdown = (
   markdown = markdown.replace(/__CODE_BLOCK_(\d+)__/g, (_, index) => {
     return componentToVariable(index).toString()
   })
-
-  // // Reinsert code blocks
-  // const componentToVariable = (index: number) => {
-  //   return <CodeBlock>{codeBlocks[index]}</CodeBlock>
-  // }
-
-  // markdown = markdown.replace(/__CODE_BLOCK_(\d+)__/g, (_, index) => {
-  //   return componentToVariable(index).toString()
-  // })
 
   return { html: markdown.trim(), toc }
 }
