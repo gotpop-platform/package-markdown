@@ -9,11 +9,22 @@ export function CodeBlock({ language = 'css', children }: { language?: string, c
   
   const { css } = useCSS({ meta: import.meta, styles })
 
+  const escapeHtml = (unsafe: string) => {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;")
+  }
+
+  const escapedCode = escapeHtml(children || "")
+
   return (
     <div data-language={language} class={mkClass(import.meta.file)}>
       <style>{css}</style>
       <pre>
-        <code>{children}</code>
+        <code>{escapedCode}</code>
       </pre>
     </div>
   )
