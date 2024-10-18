@@ -11,14 +11,13 @@ export function CodeBlock({ language = "css", children }: CodeBlockProps): JSX.E
   const styles = { "--code-language": language }
   const { css } = useCSS({ meta: import.meta, styles })
 
-  const escapeHtml = (unsafe: string) => {
-    return unsafe
+  const escapeHtml = (unsafe: string) =>
+    unsafe
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;")
-  }
 
   const escapedCode = escapeHtml(children || "")
 
