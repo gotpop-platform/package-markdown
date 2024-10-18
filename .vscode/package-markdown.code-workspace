@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    },
+  ],
+  "settings": {
+    "workbench.colorTheme": "Default Dark Modern",
+    "window.title": "${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}[Branch: master]",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "always"
+    },
+    "github.copilot.editor.enableAutoCompletions": true,
+    "emmet.includeLanguages": {
+      "javascriptreact": "html",
+      "typescriptreact": "html"
+    }
+  }
+}
