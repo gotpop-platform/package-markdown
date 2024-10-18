@@ -1,8 +1,13 @@
-import { mkClass, useCSS } from "@gotpop-platform/package-utilities"
+import { mkClass, useCSS } from "@gotpop-platform/package-utilities";
 
-import { jsxFactory } from "@gotpop-platform/package-jsx-factory"
+import { jsxFactory } from "@gotpop-platform/package-jsx-factory";
 
-export function CodeBlock({ language = 'css', children }: { language?: string, children?: string }): JSX.Element {
+interface CodeBlockProps {
+  language?: string;
+  children?: string;
+}
+
+export function CodeBlock({ language = 'css', children }: CodeBlockProps ): JSX.Element {
  const styles = {
     "--code-language": language,
   }
