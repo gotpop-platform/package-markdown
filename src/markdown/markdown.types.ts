@@ -7,6 +7,7 @@ export type MetaData = {
   prev?: string
   next?: string
   id?: string
+  section?: string
 }
 
 export type Toc = {
