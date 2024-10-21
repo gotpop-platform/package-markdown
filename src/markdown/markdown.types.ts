@@ -18,7 +18,12 @@ export type Toc = {
 
 export type MarkdownFileProps = {
   metadata: MetaData
-  content: string
+  htmlContent?: string
+  htmlArray?: {
+    metadata: Record<string, string>
+    html: string
+    toc: Toc[]
+  }[]
   toc?: Toc[]
 }
 

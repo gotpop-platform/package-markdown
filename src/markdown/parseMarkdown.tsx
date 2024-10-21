@@ -10,6 +10,8 @@
 //   let h3Counter = 0
 //   const toc: Toc[] = []
 
+import { Toc } from "./markdown.types"
+
 //   // H1
 //   markdown = markdown.replace(/^# (.*$)/gim, (_, header) => {
 //     const id = `h1-${h1Counter++}`
@@ -171,6 +173,5 @@ export const parseMarkdown = (markdown: string) => {
     return { metadata, html, toc }
   })
 
-  // console.log("parsedSections :", parsedSections)
   return parsedSections
 }

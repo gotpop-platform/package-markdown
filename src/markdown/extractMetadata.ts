@@ -4,7 +4,7 @@ export const extractMetadata = (markdownContent: string): MarkdownFileProps => {
   const metadataMatch = markdownContent.match(/^----\n([\s\S]*?)\n----/)
 
   let metadata: Record<string, string> = {}
-  let content = markdownContent
+  let htmlContent = markdownContent
 
   if (metadataMatch) {
     const metadataLines = metadataMatch[1].split("\n")
@@ -16,7 +16,7 @@ export const extractMetadata = (markdownContent: string): MarkdownFileProps => {
       }
     })
 
-    content = markdownContent.slice(metadataMatch[0].length)
+    htmlContent = markdownContent.slice(metadataMatch[0].length)
   }
 
   return {
@@ -27,6 +27,6 @@ export const extractMetadata = (markdownContent: string): MarkdownFileProps => {
       section: metadata.section || "",
       ...metadata,
     },
-    content,
+    htmlContent,
   }
 }
