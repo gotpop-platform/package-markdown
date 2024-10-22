@@ -1,6 +1,6 @@
 {
   "name": "@gotpop-platform/package-markdown",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A package for rendering markdown files",
   "main": "src/index.ts",
   "scripts": {
