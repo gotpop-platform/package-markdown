@@ -23,7 +23,10 @@ export const parseMarkdown = (markdown: string) => {
   // Extract sections
   const parsedContent = parseMarkdownWithMetadata(markdown)
 
-  const parsedSectionsMap = new Map<string, { metadata: string; html: string; toc: Toc[] }>()
+  const parsedSectionsMap = new Map<
+    string,
+    { metadata: { [key: string]: string }; html: string; toc: Toc[] }
+  >()
 
   parsedContent.forEach((content, metadata) => {
     let html = content
@@ -91,9 +94,9 @@ export const parseMarkdown = (markdown: string) => {
       })
       .trim()
 
-    parsedSectionsMap.set(metadata, { metadata, html, toc })
+    parsedSectionsMap.set(metadata, { metadata: { section: metadata }, html, toc })
   })
 
-  console.log("parsedSectionsMap :", parsedSectionsMap)
+  // console.log("parsedSectionsMap :", parsedSectionsMap)
   return parsedSectionsMap
 }
