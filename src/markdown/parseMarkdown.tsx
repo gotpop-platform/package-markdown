@@ -82,6 +82,31 @@ export const parseMarkdown = (markdown: string) => {
       return key
     })
 
+    // Extract shortcodes
+    const shortcodes: {
+      key: string
+      component: string
+      props: Record<string, string>
+      children: string
+    }[] = []
+    html = html.replace(/\[<(\w+)(.*?)>(.*?)<\/\1>\]/g, (match, component, propsStr, children) => {
+      const key = `__SHORTCODE_${shortcodes.length}__`
+      const props: Record<string, string> = {}
+
+      // Parse props
+      propsStr
+        .trim()
+        .split(/\s+/)
+        .forEach((prop) => {
+          const [key, value] = prop.split("=")
+          props[key] = value.replace(/['"]/g, "")
+        })
+
+      shortcodes.push({ key, component, props, children })
+
+      return key
+    })
+
     // Convert plain text to paragraphs
     html = html.replace(/(^|\n)([^<>\n]+)(?=\n|$)/g, (_, start, text) => {
       const trimmedText = text.trim()
@@ -102,6 +127,10 @@ export const parseMarkdown = (markdown: string) => {
     codeBlocks.map((item, index) => {
       const { key, code, language } = codeBlocks[parseInt(index.toString(), 10)]
       componentBlocks.set(key, { code, language })
+    })
+
+    shortcodes.forEach(({ key, component, props, children }) => {
+      componentBlocks.set(key, { component, props, children })
     })
 
     parsedSectionsMap.set(metadata, {
