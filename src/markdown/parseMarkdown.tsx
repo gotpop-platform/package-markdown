@@ -97,7 +97,7 @@ export const parseMarkdown = (markdown: string) => {
       propsStr
         .trim()
         .split(/\s+/)
-        .forEach((prop) => {
+        .forEach((prop: { split: (arg0: string) => [any, any] }) => {
           const [key, value] = prop.split("=")
           props[key] = value.replace(/['"]/g, "")
         })
