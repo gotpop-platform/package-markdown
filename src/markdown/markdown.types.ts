@@ -16,6 +16,13 @@ export type Toc = {
   text: string
 }
 
+export type ComponentBlocksType = Map<
+  string,
+  {
+    [key: string]: string
+  }
+> | null
+
 export type MarkdownFileProps = {
   metadata: MetaData
   htmlContent?: string
@@ -25,6 +32,7 @@ export type MarkdownFileProps = {
       metadata: Record<string, string>
       html: string
       toc: Toc[]
+      componentBlocks?: ComponentBlocksType
     }
   >
   toc?: Toc[]

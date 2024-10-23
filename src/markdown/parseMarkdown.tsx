@@ -1,6 +1,4 @@
-import { CodeBlock } from "../components/CodeBlock"
-import { Toc } from "./markdown.types"
-import { jsxFactory } from "@gotpop-platform/package-jsx-factory"
+import { ComponentBlocksType, Toc } from "./markdown.types"
 
 function parseMarkdownWithMetadata(content: string) {
   // Split the content by the metadata delimiters
@@ -25,7 +23,12 @@ export const parseMarkdown = (markdown: string) => {
 
   const parsedSectionsMap = new Map<
     string,
-    { metadata: { [key: string]: string }; html: string; toc: Toc[] }
+    {
+      metadata: { [key: string]: string }
+      html: string
+      toc: Toc[]
+      componentBlocks: ComponentBlocksType
+    }
   >()
 
   parsedContent.forEach((content, metadata) => {
@@ -71,10 +74,12 @@ export const parseMarkdown = (markdown: string) => {
     html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
 
     // Extract code blocks with language
-    const codeBlocks: { code: string; language: string }[] = []
+    const codeBlocks: { key: string; code: string; language: string }[] = []
     html = html.replace(/```(\w+)?\n([^`]+)```/g, (match, lang, code) => {
-      codeBlocks.push({ code, language: lang || "plaintext" })
-      return `__CODE_BLOCK_${codeBlocks.length - 1}__`
+      const key = `__CODE_BLOCK_${codeBlocks.length}__`
+      codeBlocks.push({ key, code, language: lang || "plaintext" })
+
+      return key
     })
 
     // Convert plain text to paragraphs
@@ -86,17 +91,26 @@ export const parseMarkdown = (markdown: string) => {
       return start
     })
 
-    // Reinsert code blocks with language prop
-    html = html
-      .replace(/__CODE_BLOCK_(\d+)__/g, (_, index) => {
-        const { code, language } = codeBlocks[parseInt(index, 10)]
-        return (<CodeBlock language={language}>{code}</CodeBlock>) as string
-      })
-      .trim()
+    const componentBlocks = new Map<
+      string,
+      {
+        code: string
+        language: string
+      }
+    >()
 
-    parsedSectionsMap.set(metadata, { metadata: { section: metadata }, html, toc })
+    codeBlocks.map((item, index) => {
+      const { key, code, language } = codeBlocks[parseInt(index.toString(), 10)]
+      componentBlocks.set(key, { code, language })
+    })
+
+    parsedSectionsMap.set(metadata, {
+      metadata: { section: metadata },
+      html,
+      toc,
+      componentBlocks: componentBlocks.size > 0 ? componentBlocks : null,
+    })
   })
 
-  // console.log("parsedSectionsMap :", parsedSectionsMap)
   return parsedSectionsMap
 }
