@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
-    "@gotpop-platform/package-jsx-factory": "^1.0.4",
-    "@gotpop-platform/package-utilities": "^1.0.13"
+    "@gotpop-platform/package-jsx-factory": "latest",
+    "@gotpop-platform/package-utilities": "latest"
   }
 }
