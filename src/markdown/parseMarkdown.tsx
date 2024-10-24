@@ -93,14 +93,16 @@ export const parseMarkdown = (markdown: string) => {
       const key = `__SHORTCODE_${shortcodes.length}__`
       const props: Record<string, string> = {}
 
-      // Parse props
-      propsStr
-        .trim()
-        .split(/\s+/)
-        .forEach((prop: { split: (arg0: string) => [any, any] }) => {
-          const [key, value] = prop.split("=")
-          props[key] = value.replace(/['"]/g, "")
-        })
+      // Parse props if propsStr is defined
+      if (propsStr) {
+        propsStr
+          .trim()
+          .split(/\s+/)
+          .forEach((prop: { split: (arg0: string) => [any, any] }) => {
+            const [key, value] = prop.split("=")
+            props[key] = value ? value.replace(/['"]/g, "") : ""
+          })
+      }
 
       shortcodes.push({ key, component, props, children })
 
