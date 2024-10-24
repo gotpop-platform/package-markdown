@@ -1,4 +1,4 @@
-import { ComponentBlocksType, Toc } from "./markdown.types"
+import { Toc } from "./markdown.types"
 
 function parseMarkdownWithMetadata(content: string) {
   // Split the content by the metadata delimiters
@@ -21,13 +21,17 @@ export const parseMarkdown = (markdown: string) => {
   // Extract sections
   const parsedContent = parseMarkdownWithMetadata(markdown)
 
+  type ComponentBlock =
+    | { code: string; language: string }
+    | { component: string; props: Record<string, any>; children: string }
+
   const parsedSectionsMap = new Map<
     string,
     {
       metadata: { [key: string]: string }
       html: string
       toc: Toc[]
-      componentBlocks: ComponentBlocksType
+      componentBlocks: Map<string, ComponentBlock> | null
     }
   >()
 
@@ -118,28 +122,22 @@ export const parseMarkdown = (markdown: string) => {
       return start
     })
 
-    const componentBlocks = new Map<
-      string,
-      {
-        code: string
-        language: string
-      }
-    >()
+    const componentBlocksy = new Map<string, ComponentBlock>()
 
     codeBlocks.map((item, index) => {
       const { key, code, language } = codeBlocks[parseInt(index.toString(), 10)]
-      componentBlocks.set(key, { code, language })
+      componentBlocksy.set(key, { code, language })
     })
 
     shortcodes.forEach(({ key, component, props, children }) => {
-      componentBlocks.set(key, { component, props, children })
+      componentBlocksy.set(key, { component, props, children })
     })
 
     parsedSectionsMap.set(metadata, {
       metadata: { section: metadata },
       html,
       toc,
-      componentBlocks: componentBlocks.size > 0 ? componentBlocks : null,
+      componentBlocks: componentBlocksy.size > 0 ? componentBlocksy : null,
     })
   })
 
