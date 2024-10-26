@@ -30,32 +30,19 @@ export const parseMarkdown = (markdown: string) => {
     let h3Counter = 0
     const sectionTableOfContents: TableOfContentsType[] = []
 
-    // H1
-    sectionHtml = sectionHtml?.replace(/^# (.*$)/gim, (match, p1) => {
-      h1Counter++
+    const headerLevels = [
+      { regex: /^# (.*$)/gim, tag: "h1", counter: () => h1Counter++, level: 1 },
+      { regex: /^## (.*$)/gim, tag: "h2", counter: () => h2Counter++, level: 2 },
+      { regex: /^### (.*$)/gim, tag: "h3", counter: () => h3Counter++, level: 3 },
+    ]
 
-      const id = `h1-${sectionKey}-${h1Counter}`
-      sectionTableOfContents.push({ level: 1, id, text: p1 })
-
-      return `<a href='#${id}'><h1 id="${id}">${p1}</h1></a>`
-    })
-
-    // H2
-    sectionHtml = sectionHtml?.replace(/^## (.*$)/gim, (match, p1) => {
-      h2Counter++
-
-      const id = `h2-${sectionKey}-${h2Counter}`
-      sectionTableOfContents.push({ level: 2, id, text: p1 })
-
-      return `<a href='#${id}'><h2 id="${id}">${p1}</h2></a>`
-    })
-
-    // H3
-    sectionHtml = sectionHtml?.replace(/^### (.*$)/gim, (match, p1) => {
-      h3Counter++
-      const id = `h3-${sectionKey}-${h3Counter}`
-      sectionTableOfContents.push({ level: 3, id, text: p1 })
-      return `<a href='#${id}'><h3 id="${id}">${p1}</h3></a>`
+    headerLevels.forEach(({ regex, tag, counter, level }) => {
+      sectionHtml = sectionHtml?.replace(regex, (match, p1) => {
+        const count = counter()
+        const id = `${tag}-${sectionKey}-${count}`
+        sectionTableOfContents.push({ level, id, text: p1 })
+        return `<a href='#${id}'><${tag} id="${id}">${p1}</${tag}></a>`
+      })
     })
 
     // Bold
