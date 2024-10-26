@@ -1,4 +1,4 @@
-import { ComponentBlock, Toc } from "./parseMarkdown.types"
+import { ComponentBlock, TableOfContentsType } from "./parseMarkdown.types"
 
 function splitIntoSections(markdown: string) {
   const sections = markdown.split(/<!--\s*(.*?)\s*-->/).filter((section) => section.trim() !== "")
@@ -12,11 +12,11 @@ function splitIntoSections(markdown: string) {
     markdownSectionsMap.set(key, value)
   }
 
-  return markdownSectionsMap
+  return { markdownSectionsMap }
 }
 
 export const parseMarkdown = (markdown: string) => {
-  const markdownSectionsMap = splitIntoSections(markdown)
+  const { markdownSectionsMap } = splitIntoSections(markdown)
   const htmlSectionsMap = new Map()
 
   for (const sectionKey of markdownSectionsMap.keys()) {
@@ -28,21 +28,25 @@ export const parseMarkdown = (markdown: string) => {
     let h1Counter = 0
     let h2Counter = 0
     let h3Counter = 0
-    const sectionTableOfContents: Toc[] = []
+    const sectionTableOfContents: TableOfContentsType[] = []
 
     // H1
     sectionHtml = sectionHtml?.replace(/^# (.*$)/gim, (match, p1) => {
       h1Counter++
+
       const id = `h1-${sectionKey}-${h1Counter}`
       sectionTableOfContents.push({ level: 1, id, text: p1 })
+
       return `<a href='#${id}'><h1 id="${id}">${p1}</h1></a>`
     })
 
     // H2
     sectionHtml = sectionHtml?.replace(/^## (.*$)/gim, (match, p1) => {
       h2Counter++
+
       const id = `h2-${sectionKey}-${h2Counter}`
       sectionTableOfContents.push({ level: 2, id, text: p1 })
+
       return `<a href='#${id}'><h2 id="${id}">${p1}</h2></a>`
     })
 
@@ -117,7 +121,14 @@ export const parseMarkdown = (markdown: string) => {
     codeBlocks.map((__, i) => {
       const { key, code, language } = codeBlocks[i]
 
-      componentBlocksMap.set(key, { code, language })
+      componentBlocksMap.set(key, {
+        component: "CodeBlock",
+        props: {
+          language,
+          code,
+        },
+        children: code,
+      })
     })
 
     shortcodes.map(({ key, component, props, children }) =>
