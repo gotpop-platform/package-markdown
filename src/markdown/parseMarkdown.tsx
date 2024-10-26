@@ -3,16 +3,16 @@ import { Toc } from "./parseMarkdown.types"
 function splitIntoSections(markdown: string) {
   const sections = markdown.split(/<!--\s*(.*?)\s*-->/).filter((section) => section.trim() !== "")
 
-  const markdownMap = new Map<string, string>()
+  const markdownSectionsMap = new Map<string, string>()
 
   for (let i = 0; i < sections.length; i += 2) {
     const key = sections[i].trim()
     const value = sections[i + 1] ? sections[i + 1].trim() : ""
 
-    markdownMap.set(key, value)
+    markdownSectionsMap.set(key, value)
   }
 
-  return markdownMap
+  return markdownSectionsMap
 }
 
 export const parseMarkdown = (markdown: string) => {

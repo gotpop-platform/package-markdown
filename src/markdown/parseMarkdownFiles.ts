@@ -1,5 +1,3 @@
-import type { MarkdownFileProps, MetaData } from "./parseMarkdown.types"
-
 import { Glob } from "bun"
 import { join } from "path"
 import { parseMarkdownFile } from "./parseMarkdownFile"
@@ -17,28 +15,18 @@ const findMarkdownFiles = async (file: string): Promise<string[]> => {
   return markdownFiles
 }
 
-export const parseMarkdownFiles = async (dir: string): Promise<MarkdownFileProps[]> => {
+export const parseMarkdownFiles = async (dir: string) => {
   const foundFiles: string[] = await findMarkdownFiles(dir)
 
-  const mapFiles = foundFiles.map(async (filePath): Promise<MarkdownFileProps> => {
+  const mapFiles = foundFiles.map(async (filePath) => {
     const path = filePath.replace(/\.md$/, "")
-    const { metadata, htmlSectionsMap } = parseMarkdownFile(dir, path)
 
-    const typedMetadata: MetaData = {
-      title: metadata.title,
-      slug: metadata.slug,
-      author: metadata.author,
-      description: metadata.description,
-      date: metadata.date,
-      prev: metadata.prev,
-      next: metadata.next,
-      id: metadata.id,
-    }
+    const { pageMetadata, htmlSectionsMap } = parseMarkdownFile(dir, path)
 
-    return { metadata: typedMetadata, htmlSectionsMap }
+    return { pageMetadata, htmlSectionsMap }
   })
 
-  const parsedFiles: MarkdownFileProps[] = await Promise.all(mapFiles)
+  const parsedFiles = await Promise.all(mapFiles)
 
   return parsedFiles
 }

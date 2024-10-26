@@ -1,8 +1,8 @@
-export const extractMetadataAndHtml = (markdownContent: string) => {
-  const metadataMatch = markdownContent.match(/^---\n([\s\S]*?)\n---/)
+export const extractMetadataAndHtml = (fileMarkdownContent: string) => {
+  const metadataMatch = fileMarkdownContent.match(/^---\n([\s\S]*?)\n---/)
 
-  let metadata: Record<string, string> = {}
-  let htmlContent = markdownContent
+  let pageMetadata: Record<string, string> = {}
+  let pageHtmlContent = fileMarkdownContent
 
   if (metadataMatch) {
     const metadataLines = metadataMatch[1].split("\n")
@@ -10,15 +10,15 @@ export const extractMetadataAndHtml = (markdownContent: string) => {
     metadataLines.forEach((line) => {
       const [key, value] = line.split(":").map((part) => part.trim())
       if (key && value) {
-        metadata[key] = value.replace(/^"|"$/g, "")
+        pageMetadata[key] = value.replace(/^"|"$/g, "")
       }
     })
 
-    htmlContent = markdownContent.slice(metadataMatch[0].length)
+    pageHtmlContent = fileMarkdownContent.slice(metadataMatch[0].length)
   }
 
   return {
-    metadata,
-    htmlContent,
+    pageMetadata,
+    pageHtmlContent,
   }
 }
