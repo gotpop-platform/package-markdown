@@ -41,3 +41,7 @@ export type MarkdownFileProps = {
 export type StyleObjProps = {
   [key: string]: string | number
 }
+
+export type ComponentBlock =
+  | { code: string; language: string }
+  | { component: string; props: Record<string, string>; children: string }
