@@ -26,7 +26,7 @@ export type ComponentBlocksType = Map<
 export type MarkdownFileProps = {
   metadata: MetaData
   htmlContent?: string
-  htmlArray?: Map<
+  htmlSectionsMap?: Map<
     string,
     {
       metadata: Record<string, string>

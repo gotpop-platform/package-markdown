@@ -8,7 +8,7 @@ export const parseMarkdownFile = (directoryPath: string, fileName: string) => {
 
   const markdownContent = readFileContent(filePath)
   const { metadata, htmlContent } = extractMetadataAndHtml(markdownContent)
-  const htmlArray = parseMarkdown(htmlContent ?? "")
+  const { htmlSectionsMap } = parseMarkdown(htmlContent ?? "")
 
-  return { metadata, htmlArray }
+  return { metadata, htmlSectionsMap }
 }

@@ -1,31 +1,28 @@
 import { Toc } from "./parseMarkdown.types"
 
-function parseMarkdownWithMetadata(content: string) {
-  // Split the content by the metadata delimiters
-  const parts = content.split(/<!--\s*(.*?)\s*-->/).filter((part) => part.trim() !== "")
+function splitIntoSections(markdown: string) {
+  const sections = markdown.split(/<!--\s*(.*?)\s*-->/).filter((section) => section.trim() !== "")
 
-  // Initialize a Map to store the grouped content
-  const contentMap = new Map<string, string>()
+  const markdownMap = new Map<string, string>()
 
-  // Iterate through the parts and populate the Map
-  for (let i = 0; i < parts.length; i += 2) {
-    const key = parts[i].trim()
-    const value = parts[i + 1] ? parts[i + 1].trim() : ""
-    contentMap.set(key, value)
+  for (let i = 0; i < sections.length; i += 2) {
+    const key = sections[i].trim()
+    const value = sections[i + 1] ? sections[i + 1].trim() : ""
+
+    markdownMap.set(key, value)
   }
 
-  return contentMap
+  return markdownMap
 }
 
 export const parseMarkdown = (markdown: string) => {
-  // Extract sections
-  const parsedContent = parseMarkdownWithMetadata(markdown)
+  const markdownSectionsMap = splitIntoSections(markdown)
 
   type ComponentBlock =
     | { code: string; language: string }
     | { component: string; props: Record<string, any>; children: string }
 
-  const parsedSectionsMap = new Map<
+  const htmlSectionsMap = new Map<
     string,
     {
       metadata: { [key: string]: string }
@@ -35,7 +32,7 @@ export const parseMarkdown = (markdown: string) => {
     }
   >()
 
-  parsedContent.forEach((content, metadata) => {
+  markdownSectionsMap.forEach((content, metadata) => {
     let html = content
 
     // Convert headers with unique IDs
@@ -79,6 +76,7 @@ export const parseMarkdown = (markdown: string) => {
 
     // Extract code blocks with language
     const codeBlocks: { key: string; code: string; language: string }[] = []
+
     html = html.replace(/```(\w+)?\n([^`]+)```/g, (match, lang, code) => {
       const key = `__CODE_BLOCK_${codeBlocks.length}__`
       codeBlocks.push({ key, code, language: lang || "plaintext" })
@@ -133,7 +131,7 @@ export const parseMarkdown = (markdown: string) => {
       componentBlocksy.set(key, { component, props, children })
     })
 
-    parsedSectionsMap.set(metadata, {
+    htmlSectionsMap.set(metadata, {
       metadata: { section: metadata },
       html,
       toc,
@@ -141,5 +139,5 @@ export const parseMarkdown = (markdown: string) => {
     })
   })
 
-  return parsedSectionsMap
+  return { htmlSectionsMap }
 }

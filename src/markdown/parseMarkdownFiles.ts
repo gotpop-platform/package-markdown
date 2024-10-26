@@ -22,7 +22,7 @@ export const parseMarkdownFiles = async (dir: string): Promise<MarkdownFileProps
 
   const mapFiles = foundFiles.map(async (filePath): Promise<MarkdownFileProps> => {
     const path = filePath.replace(/\.md$/, "")
-    const { metadata, htmlArray } = parseMarkdownFile(dir, path)
+    const { metadata, htmlSectionsMap } = parseMarkdownFile(dir, path)
 
     const typedMetadata: MetaData = {
       title: metadata.title,
@@ -35,7 +35,7 @@ export const parseMarkdownFiles = async (dir: string): Promise<MarkdownFileProps
       id: metadata.id,
     }
 
-    return { metadata: typedMetadata, htmlArray }
+    return { metadata: typedMetadata, htmlSectionsMap }
   })
 
   const parsedFiles: MarkdownFileProps[] = await Promise.all(mapFiles)
