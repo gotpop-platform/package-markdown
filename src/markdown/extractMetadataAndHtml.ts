@@ -1,6 +1,4 @@
-import type { MarkdownFileProps } from "./markdown.types"
-
-export const extractMetadata = (markdownContent: string): MarkdownFileProps => {
+export const extractMetadataAndHtml = (markdownContent: string) => {
   const metadataMatch = markdownContent.match(/^---\n([\s\S]*?)\n---/)
 
   let metadata: Record<string, string> = {}
@@ -20,13 +18,7 @@ export const extractMetadata = (markdownContent: string): MarkdownFileProps => {
   }
 
   return {
-    metadata: {
-      slug: metadata.slug || "",
-      title: metadata.title || "",
-      description: metadata.description || "",
-      section: metadata.section || "",
-      ...metadata,
-    },
+    metadata,
     htmlContent,
   }
 }

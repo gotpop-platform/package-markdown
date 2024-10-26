@@ -1,4 +1,4 @@
-import { Toc } from "./markdown.types"
+import { Toc } from "./parseMarkdown.types"
 
 function parseMarkdownWithMetadata(content: string) {
   // Split the content by the metadata delimiters

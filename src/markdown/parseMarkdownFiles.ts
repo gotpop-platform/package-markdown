@@ -1,4 +1,4 @@
-import type { MarkdownFileProps, MetaData } from "./markdown.types"
+import type { MarkdownFileProps, MetaData } from "./parseMarkdown.types"
 
 import { Glob } from "bun"
 import { join } from "path"
