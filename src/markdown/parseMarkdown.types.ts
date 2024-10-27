@@ -1,5 +1,3 @@
-export type StyleObjProps = Record<string, string | number>
-
 export type TableOfContentsType = {
   level: number
   id: string
