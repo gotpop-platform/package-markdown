@@ -1,6 +1,7 @@
 import { Glob } from "bun"
-import { join } from "path"
-import { parseMarkdownFile } from "./parseMarkdownFile"
+import { join, parse } from "path"
+import * as path from "path"
+import { getMarkdownFile, parseMarkdownFile } from "./parseMarkdownFile"
 
 const findMarkdownFiles = async (file: string): Promise<string[]> => {
   const glob = new Glob("**/*.md")
@@ -12,6 +13,7 @@ const findMarkdownFiles = async (file: string): Promise<string[]> => {
     markdownFiles.push(file)
   }
 
+  // console.log("markdownFiles :", markdownFiles)
   return markdownFiles
 }
 
@@ -29,4 +31,39 @@ export const parseMarkdownFiles = async (dir: string) => {
   const parsedFiles = await Promise.all(mapFiles)
 
   return parsedFiles
+}
+
+const setNestedMap = (map: Map<string, any>, keys: string[], value: any) => {
+  const key = keys.shift()
+  if (!key) return
+
+  if (!map.has(key)) {
+    map.set(key, new Map<string, any>())
+  }
+
+  if (keys.length === 0) {
+    map.set(key, value)
+  } else {
+    setNestedMap(map.get(key), keys, value)
+  }
+}
+
+export const contentMap = async () => {
+  const glob = new Glob("**/*.md")
+  const contentDir = join(process.cwd(), "src/content")
+
+  const contentMap = new Map<string, any>()
+
+  for await (const file of glob.scan(contentDir)) {
+    const relativePath = file.replace(contentDir + "/", "")
+    const pathParts = relativePath.split("/")
+    const fileName = pathParts.pop()
+    const fileKey = fileName ? parse(fileName).name : ""
+
+    const content = getMarkdownFile(join(contentDir, file))
+
+    setNestedMap(contentMap, pathParts.concat(fileKey), content)
+  }
+
+  return contentMap
 }
