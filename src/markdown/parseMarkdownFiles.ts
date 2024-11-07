@@ -1,7 +1,7 @@
-import { Glob } from "bun"
-import { join, parse } from "path"
-import * as path from "path"
 import { getMarkdownFile, parseMarkdownFile } from "./parseMarkdownFile"
+import { join, parse } from "path"
+
+import { Glob } from "bun"
 
 const findMarkdownFiles = async (file: string): Promise<string[]> => {
   const glob = new Glob("**/*.md")
@@ -13,7 +13,6 @@ const findMarkdownFiles = async (file: string): Promise<string[]> => {
     markdownFiles.push(file)
   }
 
-  // console.log("markdownFiles :", markdownFiles)
   return markdownFiles
 }
 
