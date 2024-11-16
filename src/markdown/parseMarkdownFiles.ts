@@ -47,19 +47,17 @@ const setNestedMap = (map: Map<string, any>, keys: string[], value: any) => {
   }
 }
 
-export const contentMap = async () => {
+export const contentMap = async ({ DIR_CONTENT }: { DIR_CONTENT: string }) => {
   const glob = new Glob("**/*.md")
-  const contentDir = join(process.cwd(), "src/content")
-
   const contentMap = new Map<string, any>()
 
-  for await (const file of glob.scan(contentDir)) {
-    const relativePath = file.replace(contentDir + "/", "")
+  for await (const file of glob.scan(DIR_CONTENT)) {
+    const relativePath = file.replace(DIR_CONTENT + "/", "")
     const pathParts = relativePath.split("/")
     const fileName = pathParts.pop()
     const fileKey = fileName ? parse(fileName).name : ""
 
-    const content = getMarkdownFile(join(contentDir, file))
+    const content = getMarkdownFile(join(DIR_CONTENT, file))
 
     setNestedMap(contentMap, pathParts.concat(fileKey), content)
   }
