@@ -47,7 +47,12 @@ const setNestedMap = (map: Map<string, any>, keys: string[], value: any) => {
   }
 }
 
-export const contentMap = async ({ DIR_CONTENT }: { DIR_CONTENT: string }) => {
+export const contentMap = async () => {
+  const DIR_CONTENT = join(
+    process.cwd(),
+    process.env.npm_package_config_dir_content || ".src/content"
+  )
+
   const glob = new Glob("**/*.md")
   const contentMap = new Map<string, any>()
 
